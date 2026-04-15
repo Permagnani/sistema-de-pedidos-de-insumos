@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sistema de Pedidos de Insumos</title>
+  <link rel="stylesheet" href="CSS/style.css" />
+</head>
+<body>
+
+  <h1>Sistema de Pedidos de Insumos</h1>
+
+  <div class="item">
+    <label for="nome">Seu Nome:</label>
+    <input type="text" id="nome" class="full" placeholder="Digite seu nome" />
+  </div>
+
+  <div class="item">
+    <label for="loja">Selecione a Loja para entrega:</label>
+    <select id="loja" class="full">
+      <option value="">Selecione a loja</option>
+      <option value="Liberdade">Liberdade</option>
+      <option value="Paulista">Paulista</option>
+      <option value="Evento">Evento</option>
+      <option value="Pinheiros">Pinheiros</option>
+    </select>
+  </div>
+
+  <p id="dataPedido" style="margin:8px 0;font-weight:bold;"></p>
+  <input type="hidden" id="timestampPedido" name="timestampPedido" />
+
+  <div id="formulario">
+
+    <h2>Cana</h2>
+    <div class="item"><label>Caldo de cana (cx) <details><summary>ℹ️</summary>Caixa com 5 litros</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Palitinho c/ 50 (pct) <details><summary>ℹ️</summary>Pacote com 50 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Palitinho clássico (pct) <details><summary>ℹ️</summary>Pacote com 12 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Palitinho Ifood (pct) <details><summary>ℹ️</summary>Pacote com 5 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Palitinho morango (pct) <details><summary>ℹ️</summary>Pacote com 12 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Palitinho maracujá (pct) <details><summary>ℹ️</summary>Pacote com 12 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Palitinho abacaxi (pct) <details><summary>ℹ️</summary>Pacote com 12 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Palitinho manga (pct) <details><summary>ℹ️</summary>Pacote com 12 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Palitinho limão (pct) <details><summary>ℹ️</summary>Pacote com 12 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Melaço de cana (un) <details><summary>ℹ️</summary>Unidade com 250g</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Rapadura (un) <details><summary>ℹ️</summary>Unidade de 1,5 kg</details></label><input type="number" min="0" /></div>
+
+    <h2>Polpas</h2>
+    <div class="item"><label>Polpa de morango (un) <details><summary>ℹ️</summary>Embalagem com 500 g</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Polpa de maracujá (un) <details><summary>ℹ️</summary>Embalagem com 500 g</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Polpa de manga (un) <details><summary>ℹ️</summary>Embalagem com 500 g</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Polpa de abacaxi (un) <details><summary>ℹ️</summary>Embalagem com 500 g</details></label><input type="number" min="0" /></div>
+
+    <h2>Frutas</h2>
+    <div class="item"><label>Abacaxi (un) <details><summary>ℹ️</summary>Unidade</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Manga (un) <details><summary>ℹ️</summary>Unidade</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Limão taiti (pct) <details><summary>ℹ️</summary>Pacote com 6 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Limão siciliano Pequeno (pct) <details><summary>ℹ️</summary>Pacote com 10 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Limão siciliano Grande (1/2 dz) <details><summary>ℹ️</summary>Pacote com 6 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Caixa de morango (cx) <details><summary>ℹ️</summary>Caixa com 48 morangos</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Bandeja de morango (bd) <details><summary>ℹ️</summary>Bandeja com 12 morangos</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Dúzia de Banana (dz) <details><summary>ℹ️</summary> 12 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Meia dúzia de banana (meia dz) <details><summary>ℹ️</summary>6 unidades</details></label><input type="number" min="0" /></div>
+
+    <h2>Embalagens</h2>
+    <div class="item"><label>Copo 350ml (cx) <details><summary>ℹ️</summary>Caixa com 1000 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Tampa bolha (cx) <details><summary>ℹ️</summary>Caixa com 1000 unidades</details></label><input type="number" min="0" /></div>
+
+    <h2>Bebidas</h2>
+    <div class="item"><label>Rum Bacardí Carta Ouro (gf) <details><summary>ℹ️</summary>Garrafa com 980 ml</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Vodka Smirnoff (gf) <details><summary>ℹ️</summary>Garrafa com 998 ml</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Cachaça Sagatiba (gf) <details><summary>ℹ️</summary>Garrafa com 700 ml</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Gin Seagers (gf) <details><summary>ℹ️</summary>Garrafa com 1 l</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Água mineral (pct) <details><summary>ℹ️</summary>Pacote com 12 garrafas de 250 ml</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Leite de coco (un) <details><summary>ℹ️</summary>Garrafa com 500 ml</details></label><input type="number" min="0" /></div>
+
+    <h2>Alimentos em pó e derivados do leite</h2>
+    <div class="item"><label>Matcha (un) <details><summary>ℹ️</summary>Embalagem com 250 g</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Café solúvel (un) <details><summary>ℹ️</summary>Embalagem com 40 g</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Cacau em pó (un) <details><summary>ℹ️</summary>Embalagem com 40 g</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Biscoito Biscoff (pct) <details><summary>ℹ️</summary>Pacote com 250 g / 32 unidades cada pacote</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Leite condensado (un) <details><summary>ℹ️</summary>Embalagem com 395 g</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Leite Ninho em pó (un) <details><summary>ℹ️</summary>Embalagem com 975 g</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Doce de leite Viçosa (un) <details><summary>ℹ️</summary>Embalagem com 800 g</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Lascas de coco (pct) <details><summary>ℹ️</summary>Pacote com 1 kg</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Canela em pó (un) <details><summary>ℹ️</summary>Embalagem com 40g</details></label><input type="number" min="0" /></div>
+
+    <h2>Descartáveis</h2>
+    <div class="item"><label>Canudo (cx) <details><summary>ℹ️</summary>Caixa com 2000 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Guardanapo (cx) <details><summary>ℹ️</summary>Caixa com 20 pacotes = 1000 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Perflex (cx) <details><summary>ℹ️</summary>Caixa com 6 rolos</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Luva P (pct) <details><summary>ℹ️</summary>Pacote com 100 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Luva M (pct) <details><summary>ℹ️</summary>Pacote com 100 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Luva G (pct) <details><summary>ℹ️</summary>Pacote com 100 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Touca (pct) <details><summary>ℹ️</summary>Pacote com 1000 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Pazinha sobremesa (pct) <details><summary>ℹ️</summary>Pacote com 1000 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Copo p/ degustação (pct) <details><summary>ℹ️</summary>Pacote com 50 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Caixa de bobina p/ maquininha 57x15 (cx) <details><summary>ℹ️</summary>Caixa com 100 rolos</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Caixa de bobina p/ impressora térmica 80x40 (cx) <details><summary>ℹ️</summary>Caixa com 10 rolos</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Saco de lixo 60L (pct) <details><summary>ℹ️</summary>Pacote com 50 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Saco de lixo verde (pct) <details><summary>ℹ️</summary>Pacote com 50 unidades</details></label><input type="number" min="0" /></div>
+
+    <h2>Limpeza</h2>
+    <div class="item"><label>Esponja (pct) <details><summary>ℹ️</summary>Pacote com 3 unidades</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Álcool líquido (un) <details><summary>ℹ️</summary>Embalagem com 1 l</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Álcool em gel (un) <details><summary>ℹ️</summary>Embalagem com 1 l</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Refil detergente (5L) <details><summary>ℹ️</summary>Galão de 5 L</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Refil cloro (5L) <details><summary>ℹ️</summary>Galão de 5 L</details></label><input type="number" min="0" /></div>
+    <div class="item"><label>Refil desinfetante (5L) <details><summary>ℹ️</summary>Galão de 5 L</details></label><input type="number" min="0" /></div>
+
+    <div class="buttons">
+      <button onclick="revisarPedido()">Revisar Pedido</button>
+      <button onclick="window.open('./pages/formatar-pedido.html','_blank')">Formatar Pedido</button>
+    </div>
+
+  </div>
+
+  <div id="resumo" class="hidden resumo">
+    <h2>Resumo do Pedido</h2>
+    <p><strong>Nome:</strong> <span id="resumoNome"></span></p>
+    <p><strong>Loja:</strong> <span id="resumoLoja"></span></p>
+    <ul id="listaResumo"></ul>
+
+    <div class="buttons">
+      <button onclick="editarPedido()">Editar Pedido</button>
+      <button onclick="enviarWhatsApp()">Enviar via WhatsApp</button>
+    </div>
+  </div>
+
+  <script src="JS/script.js"></script>
+</body>
+</html>
