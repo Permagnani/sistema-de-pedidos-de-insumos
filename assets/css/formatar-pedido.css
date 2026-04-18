@@ -1,0 +1,167 @@
+:root {
+  --rosa: #e6258c;
+  --verde: #a5f382;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f6f6f6;
+  color: #111;
+}
+
+header {
+  background: var(--rosa);
+  color: #fff;
+  padding: 16px 20px;
+}
+
+main {
+  padding: 16px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+.card-space {
+  margin-top: 16px;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.row-between {
+  justify-content: space-between;
+}
+
+.row-top {
+  margin-top: 14px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 220px;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+}
+
+input,
+button {
+  font-size: 14px;
+}
+
+label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.btn {
+  background: var(--verde);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn.secondary {
+  background: #eee;
+}
+
+.muted {
+  color: #fff;
+  font-size: 12px;
+}
+
+.cat-block {
+  margin-top: 18px;
+}
+
+.cat-title {
+  font-weight: 800;
+  margin: 8px 0 6px;
+  color: #222;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 6px 8px;
+}
+
+th {
+  background: #f0f0f0;
+  text-align: left;
+}
+
+.tbl th:nth-child(1),
+.tbl td:nth-child(1) {
+  width: 25%;
+  text-align: center;
+}
+
+.tbl th:nth-child(2),
+.tbl td:nth-child(2) {
+  width: 25%;
+  text-align: center;
+}
+
+.tbl th:nth-child(3),
+.tbl td:nth-child(3) {
+  width: 25%;
+  text-align: center;
+}
+
+.tbl th:nth-child(4),
+.tbl td:nth-child(4) {
+  width: 25%;
+  text-align: center;
+}
+
+td[contenteditable="true"] {
+  background: #fffbe6;
+}
+
+.cell-center {
+  text-align: center;
+}
+
+.cell-right {
+  text-align: right;
+}
+
+@media print {
+  header,
+  .controls,
+  .source {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  .card {
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .cat-block {
+    page-break-inside: avoid;
+  }
+}
