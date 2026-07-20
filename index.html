@@ -108,9 +108,11 @@
     <div class="item"><label>Refil desinfetante (5L) <details><summary>ℹ️</summary>Galão de 5 L</details></label><input type="number" min="0" /></div>
 
     <div class="buttons">
-      <button onclick="revisarPedido()">Revisar Pedido</button>
-      <button onclick="window.open('./pages/formatar-pedido.html','_blank')">Formatar Pedido</button>
+      <button onclick="editarPedido()">Editar Pedido</button>
+      <button onclick="enviarWhatsApp()">Enviar via WhatsApp</button>
+      <button id="btnOmie" onclick="enviarParaOmie()" class="btn-omie">Enviar para Omie</button>
     </div>
+    <pre id="omieStatus" class="omie-status"></pre>
 
   </div>
 
