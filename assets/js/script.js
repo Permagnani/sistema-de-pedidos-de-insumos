@@ -169,6 +169,64 @@ function enviarWhatsApp() {
   window.open(link, "_blank");
 }
 
+// ─── Integração com Omie ──────────────────────────────────────────────────────
+
+// URL da sua Vercel Function — troque pelo domínio gerado após o deploy
+const OMIE_API_ENDPOINT = 'https://SEU-PROJETO.vercel.app/api/pedido';
+
+function coletarTodosItens() {
+  const itens = [];
+  document.querySelectorAll("#formulario h2").forEach((categoria) => {
+    lerItensDaSecao(categoria).forEach((item) => itens.push(item));
+  });
+  return itens;
+}
+
+async function enviarParaOmie() {
+  const nome = document.getElementById("nome").value.trim();
+  const loja = document.getElementById("loja").value.trim();
+  const itens = coletarTodosItens();
+
+  if (!nome || !loja || itens.length === 0) return;
+
+  const btn = document.getElementById("btnOmie");
+  const status = document.getElementById("omieStatus");
+
+  btn.disabled = true;
+  btn.textContent = "Enviando...";
+  status.textContent = "";
+  status.className = "omie-status";
+
+  try {
+    const resp = await fetch(OMIE_API_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome, loja, itens }),
+    });
+
+    const data = await resp.json();
+
+    if (!resp.ok || data.erro) {
+      throw new Error(data.erro || "Erro desconhecido");
+    }
+
+    status.textContent = `✅ Pedido Nº ${data.numero_pedido} criado no Omie!`;
+    status.className = "omie-status omie-sucesso";
+
+    if (data.itensSemCodigo && data.itensSemCodigo.length > 0) {
+      status.textContent += `\n⚠️ Itens sem código Omie (ignorados): ${data.itensSemCodigo.join(", ")}`;
+    }
+
+  } catch (err) {
+    status.textContent = `❌ Erro ao enviar para Omie: ${err.message}`;
+    status.className = "omie-status omie-erro";
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Enviar para Omie";
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
    carimbarDataDoPedido();
 });
