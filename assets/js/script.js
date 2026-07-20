@@ -172,7 +172,7 @@ function enviarWhatsApp() {
 // ─── Integração com Omie ──────────────────────────────────────────────────────
 
 // URL da sua Vercel Function — troque pelo domínio gerado após o deploy
-const OMIE_API_ENDPOINT = 'https://sistema-de-pedidos-de-insumos.vercel.app/';
+const OMIE_API_ENDPOINT = 'https://sistema-de-pedidos-de-insumos.vercel.app/api/pedido';
 
 function coletarTodosItens() {
   const itens = [];
