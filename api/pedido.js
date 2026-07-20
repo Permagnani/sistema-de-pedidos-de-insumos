@@ -142,4 +142,8 @@ export default async function handler(req, res) {
     console.error('Erro:', err.message);
     return res.status(500).json({ erro: err.message });
   }
+<<<<<<< Updated upstream
 }
+=======
+};
+>>>>>>> Stashed changes
