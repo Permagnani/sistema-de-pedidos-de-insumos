@@ -66,8 +66,10 @@ module.exports = async function handler(req, res) {
   }
 
   try {
+
     // 1. Busca o codigo_cliente pelo CNPJ
     const codigoCliente = await buscarCodigoCliente(cnpj);
+    console.log('codigoCliente:', codigoCliente);
 
     // 2. Monta os itens do pedido
     const det = [];
