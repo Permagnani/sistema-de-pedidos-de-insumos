@@ -121,3 +121,41 @@ details {
 .badge-preco {
   display: none !important;
 }
+
+/* ── Botão Omie ── */
+.btn-omie {
+  background-color: #ff6a00 !important;
+  color: #fff !important;
+}
+
+.btn-omie:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Status do envio Omie ── */
+.omie-status {
+  margin-top: 1em;
+  padding: 0.6em 1em;
+  border-radius: 8px;
+  font-size: 0.95em;
+  white-space: pre-wrap;
+  font-family: inherit;
+  display: none;
+}
+
+.omie-status:not(:empty) {
+  display: block;
+}
+
+.omie-sucesso {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.omie-erro {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
