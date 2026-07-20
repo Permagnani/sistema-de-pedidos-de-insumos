@@ -110,6 +110,7 @@ module.exports = async function handler(req, res) {
         app_secret: process.env.OMIE_APP_SECRET,
         param: [{
           cabecalho: {
+            codigo_pedido_integracao: `PED-${Date.now()}`,
             codigo_cliente: codigoCliente,
             data_previsao:  hoje,
             etapa:          '10', // Pedido de Venda + Orçamento
