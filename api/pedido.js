@@ -32,6 +32,7 @@ async function buscarCodigoCliente(cnpj) {
   });
 
   const data = await resp.json();
+  console.log('Resposta ListarClientes:', JSON.stringify(data));
 
   if (data.faultstring) throw new Error(`Omie (busca cliente): ${data.faultstring}`);
   if (!data.clientes_cadastro || data.clientes_cadastro.length === 0) {
