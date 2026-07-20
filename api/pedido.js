@@ -118,7 +118,7 @@ module.exports = async function handler(req, res) {
           informacoes_adicionais: {
             consumidor_final: 'S',
             enviar_email:     'N',
-            obs_venda: `Pedido gerado pelo sistema de insumos.\nResponsável: ${nome} | Loja: ${loja}`,
+            
           },
         }],
       }),
