@@ -42,7 +42,7 @@ async function buscarCodigoCliente(cnpj) {
 }
 
 // ─── Handler principal ────────────────────────────────────────────────────────
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // CORS — permite chamadas do GitHub Pages
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -142,8 +142,5 @@ export default async function handler(req, res) {
     console.error('Erro:', err.message);
     return res.status(500).json({ erro: err.message });
   }
-<<<<<<< Updated upstream
 }
-=======
-};
->>>>>>> Stashed changes
+
