@@ -86,7 +86,7 @@ module.exports = async function handler(req, res) {
           quantidade:     item.quantidade,
           valor_unitario: 0, // preço vem do cadastro do produto no Omie
         },
-        inf_adic: { obs_item: item.label },
+        
       });
     });
 
