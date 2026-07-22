@@ -39,7 +39,8 @@ async function buscarCodigoCliente(cnpj) {
     throw new Error(`Cliente com CNPJ ${cnpj} não encontrado no Omie.`);
   }
 
-  return data.clientes_cadastro[0].codigo_cliente;
+  return data.clientes_cadastro[0].codigo_cliente_omie;
+  
 }
 
 // ─── Handler principal ────────────────────────────────────────────────────────
