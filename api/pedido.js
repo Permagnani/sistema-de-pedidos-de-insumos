@@ -123,6 +123,7 @@ module.exports = async function handler(req, res) {
           informacoes_adicionais: {
             consumidor_final: 'S',
             enviar_email:     'N',
+            codigo_categoria: '1.01.03',
             
           },
         }],
