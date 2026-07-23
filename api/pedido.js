@@ -124,6 +124,7 @@ module.exports = async function handler(req, res) {
             consumidor_final: 'S',
             enviar_email:     'N',
             codigo_categoria: '1.01.03',
+            codigo_conta_corrente: 9669403635,
             
           },
         }],
