@@ -3,6 +3,7 @@
 
 const OMIE_PEDIDO_URL  = 'https://app.omie.com.br/api/v1/produtos/pedido/';
 const OMIE_CLIENTE_URL = 'https://app.omie.com.br/api/v1/geral/clientes/';
+const OMIE_PRODUTO_URL = 'https://app.omie.com.br/api/v1/geral/produtos/';
 
 // ─── Mapeamento: loja selecionada no form → CNPJ do cliente no Omie ──────────
 const CNPJ_POR_LOJA = {
@@ -13,7 +14,7 @@ const CNPJ_POR_LOJA = {
 // ─── Mapeamento: nome do produto (label do HTML) → codigo_produto no Omie ────
 const PRODUTOS = require('../omie-config.json');
 
-// ─── Busca o codigo_cliente na Omie pelo CNPJ ─────────────────────────────────
+// ─── Busca o codigo_cliente na Omie pelo CNPJ ────────────────────────────────
 async function buscarCodigoCliente(cnpj) {
   const resp = await fetch(OMIE_CLIENTE_URL, {
     method:  'POST',
@@ -32,15 +33,30 @@ async function buscarCodigoCliente(cnpj) {
   });
 
   const data = await resp.json();
-  console.log('Resposta ListarClientes:', JSON.stringify(data));
-
   if (data.faultstring) throw new Error(`Omie (busca cliente): ${data.faultstring}`);
   if (!data.clientes_cadastro || data.clientes_cadastro.length === 0) {
     throw new Error(`Cliente com CNPJ ${cnpj} não encontrado no Omie.`);
   }
 
   return data.clientes_cadastro[0].codigo_cliente_omie;
-  
+}
+
+// ─── Busca o valor unitário do produto no cadastro Omie ──────────────────────
+async function buscarValorUnitario(codigoProduto) {
+  const resp = await fetch(OMIE_PRODUTO_URL, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      call:       'ConsultarProduto',
+      app_key:    process.env.OMIE_APP_KEY,
+      app_secret: process.env.OMIE_APP_SECRET,
+      param: [{ codigo_produto: codigoProduto }],
+    }),
+  });
+
+  const data = await resp.json();
+  if (data.faultstring) throw new Error(`Omie (consulta produto): ${data.faultstring}`);
+  return data.valor_unitario ?? 0;
 }
 
 // ─── Handler principal ────────────────────────────────────────────────────────
@@ -68,30 +84,31 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-
     // 1. Busca o codigo_cliente pelo CNPJ
     const codigoCliente = await buscarCodigoCliente(cnpj);
-    console.log('codigoCliente:', codigoCliente);
 
-    // 2. Monta os itens do pedido
+    // 2. Monta os itens do pedido (busca preço de cada produto no Omie)
     const det = [];
     const itensSemCodigo = [];
 
-    itens.forEach((item, index) => {
+    for (const [index, item] of itens.entries()) {
       const codigoProduto = PRODUTOS[item.label];
       if (!codigoProduto) {
         itensSemCodigo.push(item.label);
-        return;
+        continue;
       }
+
+      const valorUnitario = await buscarValorUnitario(codigoProduto);
+
       det.push({
         ide: { codigo_item_integracao: String(index + 1) },
         produto: {
-        codigo_produto: codigoProduto,   
-        quantidade: item.quantidade,
+          codigo_produto:  codigoProduto,
+          quantidade:      item.quantidade,
+          valor_unitario:  valorUnitario,
         },
-        
       });
-    });
+    }
 
     if (det.length === 0) {
       return res.status(400).json({
@@ -114,17 +131,16 @@ module.exports = async function handler(req, res) {
         param: [{
           cabecalho: {
             codigo_pedido_integracao: `PED-${Date.now()}`,
-            codigo_cliente: codigoCliente,
-            data_previsao:  hoje,
-            etapa:          '10', // Pedido de Venda + Orçamento
+            codigo_cliente:           codigoCliente,
+            data_previsao:            hoje,
+            etapa:                    '10',
           },
           det,
           informacoes_adicionais: {
-            consumidor_final: 'S',
-            enviar_email:     'N',
-            codigo_categoria: '1.01.03',
+            consumidor_final:      'S',
+            enviar_email:          'N',
+            codigo_categoria:      '1.01.03',
             codigo_conta_corrente: 9669403635,
-            
           },
         }],
       }),
@@ -148,5 +164,4 @@ module.exports = async function handler(req, res) {
     console.error('Erro:', err.message);
     return res.status(500).json({ erro: err.message });
   }
-}
-
+};
