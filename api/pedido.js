@@ -82,7 +82,7 @@ async function criarPedido(codigoCliente, det, hoje, nome) {
           enviar_email:          'N',
           codigo_categoria:      '1.01.03',
           codigo_conta_corrente: 9669403635,
-          observacoes:           nome,
+          obs_venda:           nome,
         },
       }],
     }),
