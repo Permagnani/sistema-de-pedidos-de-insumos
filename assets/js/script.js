@@ -54,7 +54,6 @@ function carimbarDataDoPedido(force = false) {
 }
 
 // Leitura de itens por seção
-  
 function lerItensDaSecao(categoriaH2) {
   const itens = [];
   let el = categoriaH2.nextElementSibling;
@@ -78,7 +77,7 @@ function lerItensDaSecao(categoriaH2) {
   return itens;
 }
 
-// Resumo do pedido 
+// Resumo do pedido
 function revisarPedido() {
   const nome = document.getElementById("nome").value.trim();
   const loja = document.getElementById("loja").value.trim();
@@ -133,7 +132,7 @@ function editarPedido() {
   document.getElementById("resumo").classList.add("hidden");
 }
 
-// Enviar para o WhatsApp 
+// Enviar para o WhatsApp
 function enviarWhatsApp() {
   const nome = document.getElementById("nome").value.trim();
   const loja = document.getElementById("loja").value.trim();
@@ -171,7 +170,6 @@ function enviarWhatsApp() {
 
 // ─── Integração com Omie ──────────────────────────────────────────────────────
 
-// URL da sua Vercel Function — troque pelo domínio gerado após o deploy
 const OMIE_API_ENDPOINT = 'https://sistema-de-pedidos-de-insumos.vercel.app/api/pedido';
 
 function coletarTodosItens() {
@@ -210,12 +208,22 @@ async function enviarParaOmie() {
       throw new Error(data.erro || "Erro desconhecido");
     }
 
-    status.textContent = `✅ Pedido Nº ${data.numero_pedido} criado no Omie!`;
-    status.className = "omie-status omie-sucesso";
+    const linhas = [];
+
+    if (data.pedido_alimentos) {
+      linhas.push(`✅ Pedido de alimentos Nº ${data.pedido_alimentos.numero_pedido} criado no Omie!`);
+    }
+
+    if (data.pedido_nao_alimentos) {
+      linhas.push(`✅ Pedido de não-alimentos Nº ${data.pedido_nao_alimentos.numero_pedido} criado no Omie!`);
+    }
 
     if (data.itensSemCodigo && data.itensSemCodigo.length > 0) {
-      status.textContent += `\n⚠️ Itens sem código Omie (ignorados): ${data.itensSemCodigo.join(", ")}`;
+      linhas.push(`⚠️ Itens sem código Omie (ignorados): ${data.itensSemCodigo.join(", ")}`);
     }
+
+    status.textContent = linhas.join("\n");
+    status.className = "omie-status omie-sucesso";
 
   } catch (err) {
     status.textContent = `❌ Erro ao enviar para Omie: ${err.message}`;
@@ -228,5 +236,5 @@ async function enviarParaOmie() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-   carimbarDataDoPedido();
+  carimbarDataDoPedido();
 });

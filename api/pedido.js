@@ -1,5 +1,5 @@
 // Vercel Serverless Function — POST /api/pedido
-// Cria um Pedido de Venda + Orçamento no Omie
+// Cria dois Pedidos de Venda no Omie: um para alimentos, outro para não-alimentos
 
 const OMIE_PEDIDO_URL  = 'https://app.omie.com.br/api/v1/produtos/pedido/';
 const OMIE_CLIENTE_URL = 'https://app.omie.com.br/api/v1/geral/clientes/';
@@ -7,11 +7,11 @@ const OMIE_PRODUTO_URL = 'https://app.omie.com.br/api/v1/geral/produtos/';
 
 // ─── Mapeamento: loja selecionada no form → CNPJ do cliente no Omie ──────────
 const CNPJ_POR_LOJA = {
-  'Liberdade': '18399996000115', // CANA MANIA MATRIZ
-  'Pinheiros': '18399996000204', // CANA MANIA PINHEIROS
+  'Liberdade': '18399996000115',
+  'Pinheiros': '18399996000204',
 };
 
-// ─── Mapeamento: nome do produto (label do HTML) → codigo_produto no Omie ────
+// ─── Mapeamento: nome do produto → { id, tipo } ───────────────────────────────
 const PRODUTOS = require('../omie-config.json');
 
 // ─── Busca o codigo_cliente na Omie pelo CNPJ ────────────────────────────────
@@ -59,9 +59,40 @@ async function buscarValorUnitario(codigoProduto) {
   return data.valor_unitario ?? 0;
 }
 
+// ─── Cria um pedido no Omie ───────────────────────────────────────────────────
+async function criarPedido(codigoCliente, det, hoje) {
+  const resp = await fetch(OMIE_PEDIDO_URL, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      call:       'IncluirPedido',
+      app_key:    process.env.OMIE_APP_KEY,
+      app_secret: process.env.OMIE_APP_SECRET,
+      param: [{
+        cabecalho: {
+          codigo_pedido_integracao: `PED-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+          codigo_cliente:           codigoCliente,
+          data_previsao:            hoje,
+          etapa:                    '10',
+        },
+        det,
+        informacoes_adicionais: {
+          consumidor_final:      'S',
+          enviar_email:          'N',
+          codigo_categoria:      '1.01.03',
+          codigo_conta_corrente: 9669403635,
+        },
+      }],
+    }),
+  });
+
+  const data = await resp.json();
+  if (data.faultstring) throw new Error(`Omie (criar pedido): ${data.faultstring}`);
+  return data;
+}
+
 // ─── Handler principal ────────────────────────────────────────────────────────
 module.exports = async function handler(req, res) {
-  // CORS — permite chamadas do GitHub Pages
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -73,7 +104,6 @@ module.exports = async function handler(req, res) {
 
   const { nome, loja, itens } = req.body;
 
-  // Validações básicas
   if (!nome || !loja || !Array.isArray(itens) || itens.length === 0) {
     return res.status(400).json({ erro: 'Dados do pedido incompletos.' });
   }
@@ -87,30 +117,37 @@ module.exports = async function handler(req, res) {
     // 1. Busca o codigo_cliente pelo CNPJ
     const codigoCliente = await buscarCodigoCliente(cnpj);
 
-    // 2. Monta os itens do pedido (busca preço de cada produto no Omie)
-    const det = [];
-    const itensSemCodigo = [];
+    // 2. Separa os itens em alimentos e não-alimentos
+    const detAlimentos    = [];
+    const detNaoAlimentos = [];
+    const itensSemCodigo  = [];
 
     for (const [index, item] of itens.entries()) {
-      const codigoProduto = PRODUTOS[item.label];
-      if (!codigoProduto) {
+      const produto = PRODUTOS[item.label];
+      if (!produto) {
         itensSemCodigo.push(item.label);
         continue;
       }
 
-      const valorUnitario = await buscarValorUnitario(codigoProduto);
+      const valorUnitario = await buscarValorUnitario(produto.id);
 
-      det.push({
+      const itemDet = {
         ide: { codigo_item_integracao: String(index + 1) },
         produto: {
-          codigo_produto:  codigoProduto,
-          quantidade:      item.quantidade,
-          valor_unitario:  valorUnitario,
+          codigo_produto: produto.id,
+          quantidade:     item.quantidade,
+          valor_unitario: valorUnitario,
         },
-      });
+      };
+
+      if (produto.tipo === 'alimento') {
+        detAlimentos.push(itemDet);
+      } else {
+        detNaoAlimentos.push(itemDet);
+      }
     }
 
-    if (det.length === 0) {
+    if (detAlimentos.length === 0 && detNaoAlimentos.length === 0) {
       return res.status(400).json({
         erro: 'Nenhum produto mapeado no Omie foi encontrado no pedido.',
         itensSemCodigo,
@@ -120,45 +157,26 @@ module.exports = async function handler(req, res) {
     // 3. Data de previsão = hoje
     const hoje = new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
 
-    // 4. Cria o pedido no Omie
-    const omieRes = await fetch(OMIE_PEDIDO_URL, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        call:       'IncluirPedido',
-        app_key:    process.env.OMIE_APP_KEY,
-        app_secret: process.env.OMIE_APP_SECRET,
-        param: [{
-          cabecalho: {
-            codigo_pedido_integracao: `PED-${Date.now()}`,
-            codigo_cliente:           codigoCliente,
-            data_previsao:            hoje,
-            etapa:                    '10',
-          },
-          det,
-          informacoes_adicionais: {
-            consumidor_final:      'S',
-            enviar_email:          'N',
-            codigo_categoria:      '1.01.03',
-            codigo_conta_corrente: 9669403635,
-          },
-        }],
-      }),
-    });
+    // 4. Cria os pedidos (apenas os grupos que têm itens)
+    const resultado = { sucesso: true, itensSemCodigo: itensSemCodigo.length > 0 ? itensSemCodigo : undefined };
 
-    const data = await omieRes.json();
-
-    if (data.faultstring) {
-      console.error('Erro Omie (pedido):', data);
-      return res.status(422).json({ erro: data.faultstring });
+    if (detAlimentos.length > 0) {
+      const pedidoAlimentos = await criarPedido(codigoCliente, detAlimentos, hoje);
+      resultado.pedido_alimentos = {
+        numero_pedido: pedidoAlimentos.numero_pedido,
+        codigo_pedido: pedidoAlimentos.codigo_pedido,
+      };
     }
 
-    return res.status(200).json({
-      sucesso:        true,
-      numero_pedido:  data.numero_pedido,
-      codigo_pedido:  data.codigo_pedido,
-      itensSemCodigo: itensSemCodigo.length > 0 ? itensSemCodigo : undefined,
-    });
+    if (detNaoAlimentos.length > 0) {
+      const pedidoNaoAlimentos = await criarPedido(codigoCliente, detNaoAlimentos, hoje);
+      resultado.pedido_nao_alimentos = {
+        numero_pedido: pedidoNaoAlimentos.numero_pedido,
+        codigo_pedido: pedidoNaoAlimentos.codigo_pedido,
+      };
+    }
+
+    return res.status(200).json(resultado);
 
   } catch (err) {
     console.error('Erro:', err.message);
