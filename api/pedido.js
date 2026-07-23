@@ -8,6 +8,7 @@ const OMIE_PRODUTO_URL = 'https://app.omie.com.br/api/v1/geral/produtos/';
 // ─── Mapeamento: loja selecionada no form → CNPJ do cliente no Omie ──────────
 const CNPJ_POR_LOJA = {
   'Liberdade': '18399996000115',
+  'Evento':    '18399996000115',
   'Pinheiros': '18399996000204',
 };
 
@@ -60,7 +61,7 @@ async function buscarValorUnitario(codigoProduto) {
 }
 
 // ─── Cria um pedido no Omie ───────────────────────────────────────────────────
-async function criarPedido(codigoCliente, det, hoje) {
+async function criarPedido(codigoCliente, det, hoje, nome) {
   const resp = await fetch(OMIE_PEDIDO_URL, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -81,6 +82,7 @@ async function criarPedido(codigoCliente, det, hoje) {
           enviar_email:          'N',
           codigo_categoria:      '1.01.03',
           codigo_conta_corrente: 9669403635,
+          observacoes:           nome,
         },
       }],
     }),
@@ -161,7 +163,7 @@ module.exports = async function handler(req, res) {
     const resultado = { sucesso: true, itensSemCodigo: itensSemCodigo.length > 0 ? itensSemCodigo : undefined };
 
     if (detAlimentos.length > 0) {
-      const pedidoAlimentos = await criarPedido(codigoCliente, detAlimentos, hoje);
+      const pedidoAlimentos = await criarPedido(codigoCliente, detAlimentos, hoje, nome);
       resultado.pedido_alimentos = {
         numero_pedido: pedidoAlimentos.numero_pedido,
         codigo_pedido: pedidoAlimentos.codigo_pedido,
@@ -169,7 +171,7 @@ module.exports = async function handler(req, res) {
     }
 
     if (detNaoAlimentos.length > 0) {
-      const pedidoNaoAlimentos = await criarPedido(codigoCliente, detNaoAlimentos, hoje);
+      const pedidoNaoAlimentos = await criarPedido(codigoCliente, detNaoAlimentos, hoje, nome);
       resultado.pedido_nao_alimentos = {
         numero_pedido: pedidoNaoAlimentos.numero_pedido,
         codigo_pedido: pedidoNaoAlimentos.codigo_pedido,
