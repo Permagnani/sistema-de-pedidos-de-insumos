@@ -86,9 +86,9 @@ module.exports = async function handler(req, res) {
       det.push({
         ide: { codigo_item_integracao: String(index + 1) },
         produto: {
-          codigo_produto_integracao: codigoProduto,
-          quantidade:     item.quantidade,
-          valor_unitario: 0, // preço vem do cadastro do produto no Omie
+        codigo_produto: codigoProduto,   // era: codigo_produto_integracao
+        quantidade: item.quantidade,
+        valor_unitario: 0,
         },
         
       });
