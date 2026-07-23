@@ -83,7 +83,7 @@ async function criarPedido(codigoCliente, det, hoje, nome) {
           codigo_categoria:      '1.01.03',
           codigo_conta_corrente: 9669403635,
         },
-        observacoes: nome, 
+        observacoes: { obs_venda: nome },
       }],
     }),
   });
